@@ -7,7 +7,7 @@ A modern, web-based cryptography application implementing classical and modern e
 
 ## 🌐 Live Demo
 
-- **Frontend**: [https://isciphers.netlify.app](https://isciphers.netlify.app)
+- **Live Website**: [https://isciphers.netlify.app](https://isciphers.netlify.app)
 - **Backend API**: [https://ciphers-1be6.onrender.com](https://ciphers-1be6.onrender.com)
 
 ## ✨ Features
