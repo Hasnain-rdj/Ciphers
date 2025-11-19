@@ -1,0 +1,233 @@
+/* Shared styles for cipher components */
+.cipher-container {
+  display: block;
+}
+
+.cipher-header h2 {
+  font-size: 1.6rem;
+  color: #00f0ff;
+  margin-bottom: 0.25rem;
+}
+
+.cipher-header p {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 1rem;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mode-toggle button {
+  padding: 0.5rem 0.9rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+  border-radius: 10px;
+}
+
+.mode-toggle button.active {
+  background: linear-gradient(135deg, rgba(0,240,255,0.12), rgba(0,168,204,0.12));
+  color: #00f0ff;
+  border-color: #00f0ff;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.output-box {
+  min-height: 120px;
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.secondary {
+  background: rgba(255,255,255,0.06);
+  color: #ffffff;
+}
+
+.result-section {
+  margin-top: 1.25rem;
+}
+
+.matrix-display {
+  display: inline-block;
+  background: rgba(0,0,0,0.35);
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.matrix-row {
+  display: flex;
+}
+
+.matrix-cell {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.steps-display {
+  margin-top: 0.75rem;
+}
+
+.step-item,
+.step-item-detailed {
+  background: rgba(255,255,255,0.02);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.step-header {
+  font-weight: 700;
+  color: #00f0ff;
+  margin-bottom: 0.25rem;
+}
+
+.hex-display-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.hex-item {
+  background: rgba(0,0,0,0.4);
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.hex-value {
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #00f0ff;
+  margin-top: 0.5rem;
+}
+
+.info-box {
+  background: rgba(255,255,255,0.02);
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.calculation-block {
+  background: rgba(0,0,0,0.35);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.matrix-input {
+  display: inline-block;
+}
+
+.matrix-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.matrix-input-cell { width: 64px; padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #fff; }
+
+.matrix-size-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.matrix-size-selector button {
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+  border-radius: 8px;
+}
+
+.matrix-size-selector button.active {
+  background: linear-gradient(135deg, rgba(0,240,255,0.12), rgba(0,168,204,0.12));
+  color: #00f0ff;
+  border-color: #00f0ff;
+}
+
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0,168,204,0.08);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+}
+
+.hex-output {
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #00f0ff;
+  word-break: break-all;
+}
+
+.hex-input {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.step-desc {
+  color: rgba(255,255,255,0.7);
+  margin-top: 0.25rem;
+}
+
+.step-note {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.calc-formula {
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #00f0ff;
+  margin-top: 0.25rem;
+}
+
+.info-row {
+  padding: 0.25rem 0;
+}
+
+.subbytes-grid {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.byte-item {
+  padding: 0.25rem 0.5rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #00f0ff;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .hex-display-grid { grid-template-columns: 1fr; }
+}
