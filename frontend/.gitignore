@@ -13,6 +13,11 @@ dist
 dist-ssr
 *.local
 
+# Electron
+electron/
+release/
+out/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -36,3 +41,25 @@ build/
 
 # Testing
 coverage/
+
+# Electron build output
+release/
+out/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+
+# Electron packager output
+*-win32-x64/
+*-darwin-x64/
+*-linux-x64/
+*-mas-x64/
+
+# Electron builder cache
+.electron-builder-cache/
+electron-builder-effective-config.yaml
+
+# Application specific
+DESKTOP_BUILD.md
