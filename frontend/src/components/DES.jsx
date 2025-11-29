@@ -69,7 +69,7 @@ function DES() {
 
       <div className="info-banner">
         <Info size={18} />
-        <span>DES uses 64-bit key (8 characters). Output is in hexadecimal format.</span>
+        <span>DES uses 64-bit key (16 hexadecimal characters). Output is in hexadecimal format.</span>
       </div>
 
       <div className="mode-toggle">
@@ -89,16 +89,16 @@ function DES() {
 
       <div className="form-grid">
         <div className="form-group">
-          <label>Key (8 characters for 64-bit)</label>
+          <label>Key (16 hex characters for 64-bit)</label>
           <input
             type="text"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            placeholder="Enter 8-character key"
-            maxLength={8}
+            placeholder="Enter 16-character hex key (e.g., 133457799BBCDFF1)"
+            maxLength={16}
           />
           <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
-            Key length: {key.length}/8 characters
+            Key length: {key.length}/16 hex characters
           </small>
         </div>
 

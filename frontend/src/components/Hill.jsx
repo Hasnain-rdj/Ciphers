@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, Unlock, Copy, Check } from 'lucide-react';
+import { Lock, Unlock, Copy, Check, Info } from 'lucide-react';
 import axios from 'axios';
 import './CipherComponent.css';
 
@@ -83,6 +83,11 @@ function Hill() {
       <div className="cipher-header">
         <h2>Hill Cipher</h2>
         <p>Matrix-based polygraphic substitution cipher</p>
+      </div>
+
+      <div className="info-banner">
+        <Info size={18} />
+        <span>Uses matrix multiplication with 2×2, 3×3, or 4×4 key matrix. Matrix must be invertible modulo 26. Plaintext uses only alphabetic characters.</span>
       </div>
 
       <div className="mode-toggle">

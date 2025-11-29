@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Users, RefreshCcw } from 'lucide-react';
+import { Users, RefreshCcw, Info } from 'lucide-react';
 import './CipherComponent.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -41,6 +41,11 @@ function DiffieHellman() {
       <div className="cipher-header">
         <h2>Diffie-Hellman Key Exchange</h2>
         <p>Compute public keys and shared secret from public parameters</p>
+      </div>
+
+      <div className="info-banner">
+        <Info size={18} />
+        <span>p must be a prime number. g must be a primitive root of p. Private keys must be positive integers less than p.</span>
       </div>
 
       <div className="form-grid">

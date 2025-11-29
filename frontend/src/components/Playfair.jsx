@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Unlock, Copy, Check } from 'lucide-react';
+import { Lock, Unlock, Copy, Check, Info } from 'lucide-react';
 import axios from 'axios';
 import './CipherComponent.css';
 
@@ -66,6 +66,11 @@ function Playfair() {
       <div className="cipher-header">
         <h2>Playfair Cipher</h2>
         <p>A digraph substitution cipher using a 5×5 key matrix</p>
+      </div>
+
+      <div className="info-banner">
+        <Info size={18} />
+        <span>Key and plaintext must contain only alphabetic characters (A-Z). Non-alphabetic characters will be rejected.</span>
       </div>
 
       <div className="mode-toggle">

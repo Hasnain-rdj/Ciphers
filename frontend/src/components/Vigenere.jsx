@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, Unlock, Copy, Check } from 'lucide-react';
+import { Lock, Unlock, Copy, Check, Info } from 'lucide-react';
 import axios from 'axios';
 import './CipherComponent.css';
 
@@ -65,6 +65,11 @@ function Vigenere() {
       <div className="cipher-header">
         <h2>Vigenère Cipher</h2>
         <p>Polyalphabetic substitution cipher using a keyword</p>
+      </div>
+
+      <div className="info-banner">
+        <Info size={18} />
+        <span>Key and plaintext must contain only alphabetic characters (A-Z). Non-alphabetic characters will be rejected.</span>
       </div>
 
       <div className="mode-toggle">
