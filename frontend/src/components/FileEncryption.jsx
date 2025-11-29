@@ -1,57 +1,308 @@
 import { useState } from 'react';
+import { Download, Upload, Lock, Unlock, Copy, Check } from 'lucide-react';
 import './CipherComponent.css';
 
 function FileEncryption() {
   const [file, setFile] = useState(null);
   const [key, setKey] = useState('');
   const [mode, setMode] = useState('encrypt');
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const handleFile = (e) => {
     setFile(e.target.files[0]);
+    setResult(null);
   };
 
-  const handleProcess = () => {
+  const arrayBufferToBase64 = (buffer) => {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  };
+
+  const base64ToArrayBuffer = (base64) => {
+    const binary = atob(base64);
+    const len = binary.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  };
+
+  const encryptFile = async () => {
     if (!file || !key) {
-      alert('Select a file and enter a key');
+      alert('Please select a file and enter a 32-character hex key');
       return;
     }
 
-    // Placeholder: file encryption should be implemented server-side with upload
-    setMessage('File encryption is not implemented in this demo. Use API endpoints for text ciphers.');
+    if (key.length !== 32 || !/^[0-9a-fA-F]+$/.test(key)) {
+      alert('Key must be exactly 32 hexadecimal characters (16 bytes)');
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const fileContent = await file.arrayBuffer();
+      const base64Content = arrayBufferToBase64(fileContent);
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/aes/encrypt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plaintext: base64Content,
+          key: key
+        })
+      });
+
+      if (!response.ok) throw new Error('Encryption failed');
+
+      const data = await response.json();
+      
+      setResult({
+        type: 'encrypted',
+        filename: file.name + '.enc',
+        ciphertext: data.ciphertext,
+        iv: data.iv,
+        originalName: file.name
+      });
+    } catch (error) {
+      alert('Encryption failed: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const decryptFile = async () => {
+    if (!file || !key) {
+      alert('Please select an encrypted file and enter the key');
+      return;
+    }
+
+    if (key.length !== 32 || !/^[0-9a-fA-F]+$/.test(key)) {
+      alert('Key must be exactly 32 hexadecimal characters (16 bytes)');
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const fileContent = await file.text();
+      const encryptedData = JSON.parse(fileContent);
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/aes/decrypt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ciphertext: encryptedData.ciphertext,
+          key: key,
+          iv: encryptedData.iv
+        })
+      });
+
+      if (!response.ok) throw new Error('Decryption failed - wrong key or corrupted file');
+
+      const data = await response.json();
+      const decryptedBuffer = base64ToArrayBuffer(data.plaintext);
+      
+      setResult({
+        type: 'decrypted',
+        filename: encryptedData.originalName || 'decrypted_file',
+        data: decryptedBuffer,
+        size: decryptedBuffer.byteLength
+      });
+    } catch (error) {
+      alert('Decryption failed: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadEncryptedFile = () => {
+    const data = JSON.stringify({
+      ciphertext: result.ciphertext,
+      iv: result.iv,
+      originalName: result.originalName
+    }, null, 2);
+    
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = result.filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadDecryptedFile = () => {
+    const blob = new Blob([result.data]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = result.filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const generateRandomKey = () => {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    const hexKey = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
+    setKey(hexKey);
+  };
+
+  const copyKey = () => {
+    navigator.clipboard.writeText(key);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <div className="cipher-container">
       <div className="cipher-header">
         <h2>File Encryption</h2>
-        <p>Optional feature: Encrypt and decrypt files (server-side implementation recommended)</p>
+        <p>Encrypt and decrypt any file using AES-128 encryption</p>
       </div>
 
       <div className="info-banner">
-        <span>📁 File encryption feature - Upload files to encrypt/decrypt them using your chosen cipher algorithm.</span>
+        <span>🔒 Files are encrypted using AES-128 with a 128-bit key (32 hex characters)</span>
+      </div>
+
+      <div className="button-group" style={{ marginBottom: '1.5rem' }}>
+        <button 
+          onClick={() => { setMode('encrypt'); setResult(null); }} 
+          className={mode === 'encrypt' ? 'active' : ''}
+        >
+          <Lock size={18} />
+          Encrypt File
+        </button>
+        <button 
+          onClick={() => { setMode('decrypt'); setResult(null); }} 
+          className={mode === 'decrypt' ? 'active' : ''}
+        >
+          <Unlock size={18} />
+          Decrypt File
+        </button>
       </div>
 
       <div className="form-group">
-        <label>File</label>
-        <input type="file" onChange={handleFile} />
-        {file && <small style={{ color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem' }}>Selected: {file.name}</small>}
+        <label>
+          {mode === 'encrypt' ? 'Select File to Encrypt' : 'Select Encrypted File (.enc)'}
+        </label>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <input 
+            type="file" 
+            onChange={handleFile}
+            accept={mode === 'decrypt' ? '.enc' : '*'}
+            style={{ flex: 1 }}
+          />
+          <Upload size={20} style={{ color: 'rgba(255,255,255,0.5)' }} />
+        </div>
+        {file && (
+          <small style={{ color: 'rgba(100,255,218,0.8)', marginTop: '0.5rem', display: 'block' }}>
+            ✓ Selected: {file.name} ({(file.size / 1024).toFixed(2)} KB)
+          </small>
+        )}
       </div>
 
       <div className="form-group">
-        <label>Key</label>
-        <input value={key} onChange={e => setKey(e.target.value)} placeholder="Enter encryption key" />
+        <label>Encryption Key (32 hex characters)</label>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input 
+            value={key} 
+            onChange={e => setKey(e.target.value.toLowerCase())} 
+            placeholder="e.g., 0123456789abcdef0123456789abcdef"
+            maxLength={32}
+            style={{ flex: 1, fontFamily: 'monospace' }}
+          />
+          <button 
+            onClick={generateRandomKey}
+            className="secondary"
+            style={{ padding: '0.5rem 1rem', whiteSpace: 'nowrap' }}
+          >
+            Generate Key
+          </button>
+          {key && (
+            <button 
+              onClick={copyKey}
+              className="secondary"
+              style={{ padding: '0.5rem 1rem' }}
+            >
+              {copied ? <Check size={18} /> : <Copy size={18} />}
+            </button>
+          )}
+        </div>
+        <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem', display: 'block' }}>
+          {key.length}/32 characters {key.length === 32 && '✓'}
+        </small>
       </div>
 
       <div className="button-group">
-        <button onClick={() => setMode('encrypt')} className={mode === 'encrypt' ? 'active' : ''}>Encrypt</button>
-        <button onClick={() => setMode('decrypt')} className={mode === 'decrypt' ? 'active' : ''}>Decrypt</button>
-        <button className="secondary" onClick={handleProcess}>Process</button>
+        <button 
+          onClick={mode === 'encrypt' ? encryptFile : decryptFile}
+          disabled={loading || !file || key.length !== 32}
+          style={{ opacity: loading || !file || key.length !== 32 ? 0.5 : 1 }}
+        >
+          {loading ? 'Processing...' : (mode === 'encrypt' ? 'Encrypt File' : 'Decrypt File')}
+        </button>
       </div>
 
-      {message && (
-        <div className="info-box" style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(255,193,7,0.1)', border: '1px solid rgba(255,193,7,0.3)', borderRadius: '8px' }}>
-          {message}
+      {result && (
+        <div className="result-box">
+          <label>
+            {result.type === 'encrypted' ? 'Encryption Successful!' : 'Decryption Successful!'}
+          </label>
+          <div style={{ 
+            padding: '1rem', 
+            background: 'rgba(100,255,218,0.1)', 
+            borderRadius: '8px',
+            border: '1px solid rgba(100,255,218,0.3)'
+          }}>
+            <p style={{ marginBottom: '0.5rem', color: 'rgba(100,255,218,1)' }}>
+              ✓ {result.type === 'encrypted' ? 'File encrypted' : 'File decrypted'} successfully
+            </p>
+            <p style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
+              Output: {result.filename}
+              {result.size && ` (${(result.size / 1024).toFixed(2)} KB)`}
+            </p>
+            <button 
+              onClick={result.type === 'encrypted' ? downloadEncryptedFile : downloadDecryptedFile}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                width: '100%',
+                justifyContent: 'center'
+              }}
+            >
+              <Download size={18} />
+              Download {result.type === 'encrypted' ? 'Encrypted' : 'Decrypted'} File
+            </button>
+          </div>
+          {result.type === 'encrypted' && (
+            <div style={{ 
+              marginTop: '1rem', 
+              padding: '1rem', 
+              background: 'rgba(255,193,7,0.1)',
+              borderRadius: '8px',
+              border: '1px solid rgba(255,193,7,0.3)'
+            }}>
+              <p style={{ fontSize: '0.9rem', color: 'rgba(255,193,7,1)', marginBottom: '0.5rem' }}>
+                ⚠️ Important: Save your encryption key!
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>
+                You will need this exact key to decrypt the file. Store it securely.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
