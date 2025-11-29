@@ -13,7 +13,7 @@ dist
 dist-ssr
 *.local
 
-# Electron
+# Electron build output only (keep source files)
 electron/
 release/
 out/
