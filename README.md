@@ -1,14 +1,16 @@
 # 🔐 Cryptography Application
 
-A modern, web-based cryptography application implementing classical and modern encryption algorithms with a futuristic UI. Built with React.js and Node.js, featuring real-time encryption/decryption and key exchange demonstrations.
+A modern cryptography application implementing classical and modern encryption algorithms with a futuristic UI. Available as both a **web application** and **desktop application** (Windows, macOS, Linux). Built with React.js, Node.js, and Electron.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Desktop-brightgreen)
 
 ## 🌐 Live Demo
 
 - **Live Website**: [https://isciphers.netlify.app](https://isciphers.netlify.app)
 - **Backend API**: [https://ciphers-1be6.onrender.com](https://ciphers-1be6.onrender.com)
+- **Desktop App**: Available for Windows, macOS, and Linux
 
 ## ✨ Features
 
@@ -20,6 +22,7 @@ A modern, web-based cryptography application implementing classical and modern e
 ### Modern Encryption
 - **AES-128**: Advanced Encryption Standard with 128-bit keys (CBC mode)
 - **DES**: Data Encryption Standard with hex input/output
+- **File Encryption**: Encrypt/decrypt any file using AES-128 (up to 50MB)
 
 ### Key Exchange
 - **Diffie-Hellman**: Secure key exchange protocol with step-by-step visualization
@@ -31,6 +34,7 @@ A modern, web-based cryptography application implementing classical and modern e
 - 🔄 Real-time encryption/decryption
 - 📱 Responsive design
 - 🌈 Gradient backgrounds with animated effects
+- 💻 Cross-platform desktop application
 
 ## 🛠️ Technology Stack
 
@@ -40,6 +44,7 @@ A modern, web-based cryptography application implementing classical and modern e
 - Framer Motion (Animations)
 - Lucide React (Icons)
 - Axios (HTTP client)
+- Electron 39.2.4 (Desktop app)
 
 ### Backend
 - Node.js
@@ -47,6 +52,7 @@ A modern, web-based cryptography application implementing classical and modern e
 - crypto (Built-in Node.js module for AES)
 - crypto-js 4.2.0 (DES implementation)
 - CORS 2.8.5
+- body-parser (50MB payload limit)
 
 ## 🚀 Getting Started
 
@@ -86,6 +92,54 @@ Start the development server:
 npm run dev
 ```
 The frontend will run on `http://localhost:5173`
+
+## 💻 Desktop Application
+
+### Build Desktop App for Windows
+
+Follow these steps to create a standalone Windows desktop application:
+
+#### Step 1: Navigate to frontend directory
+```powershell
+cd frontend
+```
+
+#### Step 2: Build the desktop application
+```powershell
+npm run package:win
+```
+
+#### Step 3: Find your application
+The packaged app will be in: `frontend/release/CryptographyApp-win32-x64/`
+
+#### Step 4: Run the application
+Double-click `CryptographyApp.exe` to launch
+
+### Desktop App Features
+- ✅ Standalone Windows application
+- ✅ No installation required (portable)
+- ✅ Works with online backend API
+- ✅ All encryption features included
+- ✅ Futuristic UI with animations
+- ✅ File size: ~200-250 MB (includes Chromium runtime)
+
+### Build for Other Platforms
+
+**macOS:**
+```bash
+npm run package:mac
+```
+
+**Linux:**
+```bash
+npm run package:linux
+```
+
+### Development Mode (Desktop)
+Run the desktop app in development mode with hot reload:
+```powershell
+npm run electron:dev
+```
 
 ## 📦 Deployment
 
@@ -162,6 +216,13 @@ POST /api/aes/encrypt
 }
 ```
 
+### File Encryption
+The File Encryption feature allows you to encrypt any file (images, documents, videos) up to 50MB:
+
+1. **Encrypt**: Upload a file, generate or enter a 32-character hex key, and download the encrypted `.enc` file
+2. **Decrypt**: Upload the `.enc` file with the same key to recover the original file
+3. **Security**: Each encryption uses a unique IV (Initialization Vector) for added security
+
 ## 📂 Project Structure
 
 ```
@@ -184,9 +245,19 @@ Ciphers/
 │   ├── server.js
 │   └── package.json
 ├── frontend/
+│   ├── electron/
+│   │   ├── main.cjs         # Electron main process
+│   │   └── preload.cjs      # Preload script
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── Playfair.jsx
+│   │   │   ├── Hill.jsx
+│   │   │   ├── Vigenere.jsx
+│   │   │   ├── AES.jsx
+│   │   │   ├── DES.jsx
+│   │   │   ├── DiffieHellman.jsx
+│   │   │   ├── FileEncryption.jsx
+│   │   │   └── CipherComponent.css
 │   │   │   ├── Hill.jsx
 │   │   │   ├── Vigenere.jsx
 │   │   │   ├── AES.jsx
