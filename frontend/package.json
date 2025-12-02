@@ -18,7 +18,7 @@
     "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "npm run build && electron-builder --linux",
     "copy-backend": "node copy-backend.cjs",
-    "package:win": "npm run build && npm run copy-backend && electron-packager . CryptographyApp --platform=win32 --arch=x64 --out=release --overwrite --icon=public/icon.ico --asar --ignore=\"^/node_modules$\" --ignore=\"^/src$\" --ignore=\"^/public$\" --ignore=\"^\\.env$\" --ignore=\"^\\.gitignore$\" --ignore=\"^/eslint\\.config\\.js$\" --ignore=\"^/vite\\.config\\.js$\" --ignore=\"^/index\\.html$\" --ignore=\"^/README\\.md$\" --ignore=\"^/copy-backend\\.cjs$\""
+    "package:win": "npm run build && npm run copy-backend && electron-packager . CryptographyApp --platform=win32 --arch=x64 --out=release --overwrite --icon=public/icon.ico --ignore=\"^/node_modules$\" --ignore=\"^/src$\" --ignore=\"^/public$\" --ignore=\"^\\.env$\" --ignore=\"^\\.gitignore$\" --ignore=\"^/eslint\\.config\\.js$\" --ignore=\"^/vite\\.config\\.js$\" --ignore=\"^/index\\.html$\" --ignore=\"^/README\\.md$\" --ignore=\"^/copy-backend\\.cjs$\""
   },
   "dependencies": {
     "app-builder-bin": "^5.0.0-alpha.12",
@@ -33,6 +33,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
+    "asar": "^3.2.0",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "^39.2.4",
