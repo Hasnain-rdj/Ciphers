@@ -97,7 +97,7 @@ The frontend will run on `http://localhost:5173`
 
 ### Build Desktop App for Windows
 
-Follow these steps to create a standalone Windows desktop application:
+The desktop application is **completely standalone** - it includes both the frontend and backend server, so you don't need to run any separate servers!
 
 #### Step 1: Navigate to frontend directory
 ```powershell
@@ -109,19 +109,30 @@ cd frontend
 npm run package:win
 ```
 
+This will:
+- Build the React frontend
+- Copy the backend server and install its dependencies
+- Package everything into a standalone executable
+
 #### Step 3: Find your application
 The packaged app will be in: `frontend/release/CryptographyApp-win32-x64/`
 
 #### Step 4: Run the application
 Double-click `CryptographyApp.exe` to launch
 
+The application will automatically:
+1. Start the backend server on `http://localhost:5000`
+2. Launch the frontend UI
+3. Connect them together seamlessly
+
 ### Desktop App Features
-- ✅ Standalone Windows application
-- ✅ No installation required (portable)
-- ✅ Works with online backend API
+- ✅ **Fully standalone** - No separate backend server needed!
+- ✅ **Backend included** - Server starts automatically when you launch the app
+- ✅ **No installation required** (portable)
+- ✅ **Works offline** - All encryption happens locally
 - ✅ All encryption features included
 - ✅ Futuristic UI with animations
-- ✅ File size: ~200-250 MB (includes Chromium runtime)
+- ✅ File size: ~200-250 MB (includes Chromium runtime + Node.js backend)
 
 ### Build for Other Platforms
 
@@ -140,6 +151,8 @@ Run the desktop app in development mode with hot reload:
 ```powershell
 npm run electron:dev
 ```
+
+Note: In development mode, make sure the backend server is running separately on port 5000.
 
 ## 📦 Deployment
 

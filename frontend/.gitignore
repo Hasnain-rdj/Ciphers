@@ -17,6 +17,7 @@ dist-ssr
 electron/
 release/
 out/
+backend-bundled/
 
 # Editor directories and files
 .vscode/*

@@ -17,7 +17,8 @@
     "electron:build:win": "npm run build && electron-builder --win",
     "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "npm run build && electron-builder --linux",
-    "package:win": "npm run build && electron-packager . CryptographyApp --platform=win32 --arch=x64 --out=release --overwrite --icon=public/icon.ico --asar"
+    "copy-backend": "node copy-backend.cjs",
+    "package:win": "npm run build && npm run copy-backend && electron-packager . CryptographyApp --platform=win32 --arch=x64 --out=release --overwrite --icon=public/icon.ico --asar --ignore=\"^/node_modules$\" --ignore=\"^/src$\" --ignore=\"^/public$\" --ignore=\"^\\.env$\" --ignore=\"^\\.gitignore$\" --ignore=\"^/eslint\\.config\\.js$\" --ignore=\"^/vite\\.config\\.js$\" --ignore=\"^/index\\.html$\" --ignore=\"^/README\\.md$\" --ignore=\"^/copy-backend\\.cjs$\""
   },
   "dependencies": {
     "app-builder-bin": "^5.0.0-alpha.12",
@@ -40,6 +41,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "fs-extra": "^11.3.2",
     "globals": "^16.5.0",
     "vite": "npm:rolldown-vite@7.2.2",
     "wait-on": "^9.0.3"
