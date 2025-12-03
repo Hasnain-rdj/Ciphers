@@ -69,7 +69,7 @@ function AES() {
 
       <div className="info-banner">
         <Info size={18} />
-        <span>AES uses 128-bit key (32 hexadecimal characters). Output is in hexadecimal format.</span>
+        <span>AES uses 128-bit encryption. Enter any text as your key. Output is in hexadecimal format.</span>
       </div>
 
       <div className="mode-toggle">
@@ -89,17 +89,13 @@ function AES() {
 
       <div className="form-grid">
         <div className="form-group">
-          <label>Key (32 hexadecimal characters)</label>
+          <label>Key</label>
           <input
             type="text"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            placeholder="Enter 32-character hex key"
-            maxLength={32}
+            placeholder="Enter encryption key"
           />
-          <small style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
-            Key length: {key.length}/32 hex characters
-          </small>
         </div>
 
         {mode === 'encrypt' ? (

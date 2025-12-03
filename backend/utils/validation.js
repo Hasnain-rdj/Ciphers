@@ -26,33 +26,21 @@ class ValidationHelper {
   }
 
   /**
-   * Validate AES key (must be 32 hex characters for 128-bit)
+   * Validate AES key (accepts any text, will be converted to proper format)
    */
   static validateAESKey(key) {
     if (!key || key.trim() === '') {
-      return { valid: false, message: 'AES key is required. Please enter a 32-character hexadecimal key.' };
-    }
-    if (key.length !== 32) {
-      return { valid: false, message: `AES key must be exactly 32 hexadecimal characters (128 bits). Current length: ${key.length}` };
-    }
-    if (!this.isHexadecimal(key)) {
-      return { valid: false, message: 'AES key must contain only hexadecimal characters (0-9, A-F)' };
+      return { valid: false, message: 'AES key is required. Please enter an encryption key.' };
     }
     return { valid: true };
   }
 
   /**
-   * Validate DES key (must be valid hex)
+   * Validate DES key (accepts any text, will be converted to proper format)
    */
   static validateDESKey(key) {
     if (!key || key.trim() === '') {
-      return { valid: false, message: 'DES key is required. Please enter a hexadecimal key.' };
-    }
-    if (!this.isHexadecimal(key)) {
-      return { valid: false, message: 'DES key must contain only hexadecimal characters (0-9, A-F)' };
-    }
-    if (key.length !== 16) {
-      return { valid: false, message: `DES key should be 16 hexadecimal characters (64 bits). Current length: ${key.length}` };
+      return { valid: false, message: 'DES key is required. Please enter an encryption key.' };
     }
     return { valid: true };
   }

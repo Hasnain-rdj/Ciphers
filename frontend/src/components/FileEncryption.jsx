@@ -37,12 +37,7 @@ function FileEncryption() {
 
   const encryptFile = async () => {
     if (!file || !key) {
-      alert('Please select a file and enter a 32-character hex key');
-      return;
-    }
-
-    if (key.length !== 32 || !/^[0-9a-fA-F]+$/.test(key)) {
-      alert('Key must be exactly 32 hexadecimal characters (16 bytes)');
+      alert('Please select a file and enter an encryption key');
       return;
     }
 
@@ -62,7 +57,10 @@ function FileEncryption() {
         })
       });
 
-      if (!response.ok) throw new Error('Encryption failed');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Encryption failed');
+      }
 
       const data = await response.json();
       
@@ -86,17 +84,22 @@ function FileEncryption() {
       return;
     }
 
-    if (key.length !== 32 || !/^[0-9a-fA-F]+$/.test(key)) {
-      alert('Key must be exactly 32 hexadecimal characters (16 bytes)');
-      return;
-    }
-
     setLoading(true);
     setResult(null);
 
     try {
       const fileContent = await file.text();
-      const encryptedData = JSON.parse(fileContent);
+      let encryptedData;
+      
+      try {
+        encryptedData = JSON.parse(fileContent);
+      } catch (parseError) {
+        throw new Error('Invalid file format. The selected file is not a valid encrypted file (.enc). Please make sure you selected the correct file that was created by this application.');
+      }
+
+      if (!encryptedData.iv || !encryptedData.ciphertext) {
+        throw new Error('Missing encryption data. The file must contain both "iv" and "ciphertext" fields. Please encrypt a new file.');
+      }
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/aes/decrypt`, {
         method: 'POST',
@@ -108,7 +111,10 @@ function FileEncryption() {
         })
       });
 
-      if (!response.ok) throw new Error('Decryption failed - wrong key or corrupted file');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Decryption failed - wrong key or corrupted file');
+      }
 
       const data = await response.json();
       const decryptedBuffer = base64ToArrayBuffer(data.plaintext);
@@ -173,7 +179,7 @@ function FileEncryption() {
       </div>
 
       <div className="info-banner">
-        <span>🔒 Files are encrypted using AES-128 with a 128-bit key (32 hex characters)</span>
+        <span>🔒 Files are encrypted using AES-128 encryption. You can use any text as your encryption key.</span>
       </div>
 
       <div className="button-group" style={{ marginBottom: '1.5rem' }}>
@@ -214,14 +220,13 @@ function FileEncryption() {
       </div>
 
       <div className="form-group">
-        <label>Encryption Key (32 hex characters)</label>
+        <label>Encryption Key</label>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <input 
             value={key} 
-            onChange={e => setKey(e.target.value.toLowerCase())} 
-            placeholder="e.g., 0123456789abcdef0123456789abcdef"
-            maxLength={32}
-            style={{ flex: 1, fontFamily: 'monospace' }}
+            onChange={e => setKey(e.target.value)} 
+            placeholder="Enter your encryption key"
+            style={{ flex: 1 }}
           />
           <button 
             onClick={generateRandomKey}
@@ -241,15 +246,15 @@ function FileEncryption() {
           )}
         </div>
         <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem', display: 'block' }}>
-          {key.length}/32 characters {key.length === 32 && '✓'}
+          Use the same key to decrypt your file later
         </small>
       </div>
 
       <div className="button-group">
         <button 
           onClick={mode === 'encrypt' ? encryptFile : decryptFile}
-          disabled={loading || !file || key.length !== 32}
-          style={{ opacity: loading || !file || key.length !== 32 ? 0.5 : 1 }}
+          disabled={loading || !file || !key}
+          style={{ opacity: loading || !file || !key ? 0.5 : 1 }}
         >
           {loading ? 'Processing...' : (mode === 'encrypt' ? 'Encrypt File' : 'Decrypt File')}
         </button>

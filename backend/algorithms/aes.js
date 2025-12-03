@@ -35,6 +35,7 @@ class AESCipher {
         ciphertext: encrypted.toString('hex').toUpperCase(),
         plaintextHex: paddedPlaintext.toString('hex').toUpperCase(),
         keyHex: keyHash.toString('hex').toUpperCase(),
+        iv: iv.toString('hex').toUpperCase(),
         steps
       };
     } catch (error) {
@@ -43,7 +44,7 @@ class AESCipher {
   }
 
   // AES-128 decryption
-  static decrypt(ciphertextHex, key) {
+  static decrypt(ciphertextHex, key, ivHex) {
     try {
       // Ensure key is 16 bytes (128 bits)
       const keyBuffer = Buffer.from(key, 'utf8');
@@ -52,8 +53,10 @@ class AESCipher {
       // Convert hex ciphertext to buffer
       const ciphertext = Buffer.from(ciphertextHex, 'hex');
 
+      // Use provided IV or default to zero IV
+      const iv = ivHex ? Buffer.from(ivHex, 'hex') : Buffer.alloc(16, 0);
+      
       // Create decipher
-      const iv = Buffer.alloc(16, 0); // Zero IV
       const decipher = crypto.createDecipheriv('aes-128-cbc', keyHash, iv);
       decipher.setAutoPadding(false);
 
